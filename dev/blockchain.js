@@ -1,9 +1,12 @@
 const sha256=require('sha256') //hashing function 
-
+const currentNodeUrl=process.argv[3];
 
 function Blockchain() { 
     this.chain=[]; //all the blocks that will be created will be stored in this array as a chain  
     this.pendingTransactions=[]; //store all the new transactions before they are stored in blocks and mined.
+    this.currentNodeUrl=currentNodeUrl //now blockchain knows onto which url it is being hsoted on
+    //we want each node to know what other nodes are present in the network
+    this.networkNodes=[] //url of all nodes in network
     this.createNewBlock(100,'0','0') //Genesis Block with random parameters
 }
 

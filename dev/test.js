@@ -1,30 +1,47 @@
-const Blockchain=require('./blockchain')
-const bitcoin = new Blockchain();
-
-// const previousBlockHash='FW^RWTUGWVHCGUYDYE*&T&^&&*&'
-// //const nonce=100
-// const currentBlockData=[
-//     {
-//         amount:10,
-//         sender:'RTR&^&FFVHGHFTGYJG768',
-//         recipent:'HHSGJSHHS676897979'
-//     },
-//     {
-//         amount:100,
-//         sender:'RTR&^&FdksnkdG768',
-//         recipent:'HHSGJdsdsgSHHS676897971'
-//     },
-//     {
-//         amount:1000,
-//         sender:'RTR&djdfhjhGHFTGYJG768',
-//         recipent:'HHSGdfjjdhfjhdk676897979'
-//     }
-// ]
+//using callbacks
+/*
+function http(url,method,sucesscallback,errhandler){
+    setTimeout(()=>{
+        var data="Yo Yo";
+        if(data){
+            sucesscallback(data)
+        }
+        else{
+            errhandler('No data found')
+        }
+    },1000);
+}
 
 
-// //console.log(bitcoin.hashBlock(previousBlockHash,currentBlockData,nonce))
-// console.log(bitcoin.proofOfWork(previousBlockHash,currentBlockData))
-// console.log(bitcoin.hashBlock(previousBlockHash,currentBlockData,28582))
+http('https://google.com','GET',function(data){
+    console.log(data);
+},function(err){
+    console.log(err)
+})
+*/
+
+//using promises
+
+function http(url,method){
+    var promise= new Promise(function(resolve,reject){
+        setTimeout(function(){
+            var data='sjajhksh';
+            if(data){
+                resolve(data)
+            }
+            else{
+                reject('No data')
+            }
+        },1000)
+    })
+    return promise;
+}
 
 
-console.log(bitcoin)
+http('https://google.com','GET')
+.then(function(data){
+    console.log(data)
+})
+.catch(function(err){
+    console.log(err)
+})
