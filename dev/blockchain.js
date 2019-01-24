@@ -1,5 +1,6 @@
 const sha256=require('sha256') //hashing function 
 const currentNodeUrl=process.argv[3];
+const uuid=require('uuid')
 
 function Blockchain() { 
     this.chain=[]; //all the blocks that will be created will be stored in this array as a chain  
@@ -34,12 +35,16 @@ Blockchain.prototype.createNewTransaction = function(amount, sender,recipent){
     const newTransaction={
         amount:amount,
         sender:sender,
-        recipent:recipent
+        recipent:recipent,
+        transactionId:uuid().split('-').join('')
     };
+    return newTransaction
+}
 
-    this.pendingTransactions.push(newTransaction); //push this new transaction in pending transactions and this transaction will be added to blockchain when a block will be mined.
+
+Blockchain.prototype.addTransactionToPendingTransactions=function(transactionObj){
+    this.pendingTransactions.push(transactionObj)
     return this.getLastBlock()['index']+1;
-
 }
 
 //this function generates a random string from a block using previos block random string
