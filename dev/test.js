@@ -128,4 +128,4 @@ const bc1={
     "networkNodes": []
     }
 
-    console.log(bitcoin.chainIsValid(bc1.chain))
+    console.log(bitcoin.chainIsValid(bc1.chain)) 

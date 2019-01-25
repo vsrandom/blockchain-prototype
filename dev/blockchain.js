@@ -55,6 +55,53 @@ Blockchain.prototype.hashBlock=function(previousBlockHash,currentBlockData,nonce
     return hash; 
 }
 
+Blockchain.prototype.getBlock=function(blockHash){
+    let correctBlock=null;
+    this.chain.forEach(block=>{
+        if(block.hash===blockHash){
+            correctBlock=block;
+        }
+    })
+    return correctBlock
+}
+
+Blockchain.prototype.getTransaction=function(transactionId){
+    let correctTransaction=null
+    let correctBlock=null
+    this.chain.forEach(block=>{
+        block.transactions.forEach(transaction=>{
+            if(transaction.transactionId===transactionId){
+                correctTransaction=transaction
+                correctBlock=block
+            }
+        })
+    })
+    return {
+        transaction:correctTransaction,
+        block:correctBlock
+    }
+}
+
+Blockchain.prototype.getAddressData=function(address){
+    const addressTransactions=[]
+    this.chain.forEach(block=>{
+        block.transactions.forEach(transaction=>{
+            if(transaction.sender === address || transaction.recipent === address){
+                addressTransactions.push(transaction)
+            }
+        })
+    })
+    let balance=0;
+    addressTransactions.forEach(transaction=>{
+        if(transaction.recipent===address) balance += transaction.amount
+        else if(transaction.sender===address) balance -= transaction.amount
+    })
+    return {
+        addressTransactions:addressTransactions,
+        addressBalance:balance
+    }
+}
+
 /*
 Note on proof of work:
 Now we want that each block in our blockchain should be legit that is the transactions in it
