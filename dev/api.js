@@ -172,6 +172,51 @@ app.post('/register-nodes-bulk',(req,res)=>{
     res.json({note:'Bulk Registeration successful !'})
 })
 
+app.get('/consensus',function(req,res){
+    const requestPromises=[];
+    bitcoin.networkNodes.forEach(networkNodeUrl=>{
+        const requestOptions={
+            uri:networkNodeUrl+'/blockchain',
+            method:'GET',
+            json:true
+        }
+        requestPromises.push(rp(requestOptions))
+    })
+    //after running all promises in return we will get array of blockchains from
+    //from each node in netwrok as we can see the '/blockchain' end point it in response sends 
+    //a blockchain !
+    Promise.all(requestPromises)
+    .then(blockchains=>{
+        const currentChainLength=bitcoin.chain.length
+        let maxChainLength=currentChainLength
+        let newLongestChain=null
+        let newPendingTransactions=null
+        blockchains.forEach(blockchain=>{
+            if(blockchain.chain.length > maxChainLength){
+                maxChainLength=blockchain.chain.length
+                newLongestChain=blockchain.chain
+                newPendingTransactions=blockchain.pendingTransactions;
+            }
+        })
+
+        if(!newLongestChain || (newLongestChain && !bitcoin.chainIsValid(newLongestChain))){
+            res.json({
+                note:'Current Chain has not been Replaced',
+                chain: bitcoin.chain
+            })
+        }
+        else {
+            bitcoin.chain=newLongestChain
+            bitcoin.pendingTransactions=newPendingTransactions
+            res.json({
+                note:'Chain has been Updated',
+                chain: bitcoin.chain
+            })
+        }
+
+    })
+})
+
 //
 app.listen(port,()=>{
     console.log(`Listening on port ${port}`)
